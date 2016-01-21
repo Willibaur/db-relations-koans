@@ -11,12 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150731124953) do
+ActiveRecord::Schema.define(version: 20160121114149) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "asteroids", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "astronauts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -29,11 +34,24 @@ ActiveRecord::Schema.define(version: 20150731124953) do
   create_table "planets", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "sun_id"
+  end
+
+  add_index "planets", ["sun_id"], name: "index_planets_on_sun_id", using: :btree
+
+  create_table "spaceships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "suns", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "planet_id"
   end
 
+  add_index "suns", ["planet_id"], name: "index_suns_on_planet_id", using: :btree
+
+  add_foreign_key "planets", "suns"
+  add_foreign_key "suns", "planets"
 end
